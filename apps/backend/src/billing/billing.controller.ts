@@ -3,36 +3,37 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Query,
   Body,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { BillingService } from './billing.service';
 import { CreateBillingDto } from './dto/create-billing.dto';
 import { UpdateBillingDto } from './dto/update-billing.dto';
-import { AuthGuard } from '../../auth.guard';
+import { FilterBillingDto } from './dto/filter-billing.dto';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/role.decorator';
 
 @Controller('billing')
 export class BillingController {
   constructor(private readonly billingService: BillingService) {}
 
   @Get()
-  async findAll(
-    @Query('productCode') productCode: number,
-    @Query('location') location: string
-  ) {
-    return this.billingService.findAll(productCode, location);
+  async findAll(@Query() filter: FilterBillingDto) {
+    return this.billingService.findAll(filter);
   }
 
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   async create(@Body() createBillingDto: CreateBillingDto) {
     return this.billingService.create(createBillingDto);
   }
 
   @Put()
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles('admin')
   async update(
     @Query('productCode') productCode: number,
     @Body() updateBillingDto: UpdateBillingDto
@@ -41,8 +42,9 @@ export class BillingController {
   }
 
   @Delete()
-  @UseGuards(AuthGuard)
-  async delete(@Query('productCode') productCode: number) {
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  async delete(@Query('productCode') productCode: number): Promise<void> {
     return this.billingService.delete(productCode);
   }
 }

@@ -1,9 +1,11 @@
-import { IsString, IsDecimal } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class UpdateBillingDto {
+  @IsNotEmpty()
   @IsString()
   location: string;
 
-  @IsDecimal()
+  @IsNotEmpty()
+  @IsNumber()
   premiumPaid: number;
 }

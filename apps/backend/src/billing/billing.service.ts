@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Billing } from './billing.entity';
 import { CreateBillingDto } from './dto/create-billing.dto';
 import { UpdateBillingDto } from './dto/update-billing.dto';
+import { FilterBillingDto } from './dto/filter-billing.dto';
 
 @Injectable()
 export class BillingService {
@@ -12,14 +13,18 @@ export class BillingService {
     private billingRepository: Repository<Billing>
   ) {}
 
-  async findAll(productCode?: number, location?: string): Promise<Billing[]> {
+  async findAll(filter: FilterBillingDto): Promise<Billing[]> {
+    const { productCode, location } = filter;
     const query = this.billingRepository.createQueryBuilder('billing');
+
     if (productCode) {
       query.andWhere('billing.productCode = :productCode', { productCode });
     }
+
     if (location) {
       query.andWhere('billing.location = :location', { location });
     }
+
     return query.getMany();
   }
 
@@ -32,15 +37,22 @@ export class BillingService {
     productCode: number,
     updateBillingDto: UpdateBillingDto
   ): Promise<Billing> {
-    await this.billingRepository.update({ productCode }, updateBillingDto);
-    const billing = await this.billingRepository.findOne({ where: { productCode } });
+    const billing = await this.billingRepository.findOne({
+      where: { productCode },
+    });
     if (!billing) {
-      throw new Error('Billing not found');
+      throw new Error('Billing record not found');
     }
-    return billing;
+    Object.assign(billing, updateBillingDto);
+    return this.billingRepository.save(billing);
   }
 
   async delete(productCode: number): Promise<void> {
-    await this.billingRepository.delete({ productCode });
+    const result = await this.billingRepository.delete({ productCode });
+    if (result.affected === 0) {
+      throw new Error(
+        `No billing records found for product code ${productCode}`
+      );
+    }
   }
 }

@@ -1,99 +1,229 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Customer Billing Portal API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a NestJS-based API for managing customer billing records. It provides endpoints for retrieving, creating, updating, and deleting billing records. The API is connected to a PostgreSQL database and uses TypeORM for database operations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Table of Contents
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. [Features](#features)
+2. [Prerequisites](#prerequisites)
+3. [Setup](#setup)
+4. [Running the Application](#running-the-application)
+5. [Accessing Swagger Documentation](#accessing-swagger-documentation)
+6. [Seeding the Database](#seeding-the-database)
+7. [API Endpoints](#api-endpoints)
+8. [Docker Setup](#docker-setup)
+9. [Testing](#testing)
 
-## Project setup
+---
 
-```bash
-$ pnpm install
-```
+## Features
 
-## Compile and run the project
+- **CRUD Operations**: Create, read, update, and delete billing records.
+- **Role-Based Access Control**: Admin-only access for creating, updating, and deleting records.
+- **Swagger Documentation**: Interactive API documentation.
+- **PostgreSQL Integration**: Uses TypeORM to connect to a PostgreSQL database.
+- **Docker Support**: Ready for containerization with Docker.
 
-```bash
-# development
-$ pnpm run start
+---
 
-# watch mode
-$ pnpm run start:dev
+## Prerequisites
 
-# production mode
-$ pnpm run start:prod
-```
+Before running the project, ensure you have the following installed:
 
-## Run tests
+- [Node.js](https://nodejs.org/) (v22 or higher)
+- [PostgreSQL](https://www.postgresql.org/) (v15 or higher)
+- [NestJS CLI](https://docs.nestjs.com/cli/overview) (optional but recommended)
+- [Docker](https://www.docker.com/) (optional, for containerization)
+
+---
+
+## Setup
+
+### 1. Clone the Repository
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+  git clone https://github.com/chowks/insurance-portfolio.git
+  cd insurance-portfolio
 ```
 
-## Deployment
+2. **Install Dependencies**:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+   ```bash
+   npm i -g pnpm && pnpm i
+   ```
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+3. **Set Up PostgreSQL**:
+
+   - Create a database named `CUSTOMER_BILLING_PORTAL`.
+   - Update the database credentials in the `app.module.ts` file or environment variables.
+
+4. **Environment Variables**:
+   Create a `.env` file in the root directory and add the following:
+   ```env
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   DB_DATABASE=CUSTOMER_BILLING_PORTAL
+   ```
+
+---
+
+## Running the Application
+
+To start the application in development mode:
 
 ```bash
-$ pnpm install -g mau
-$ mau deploy
+pnpm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+To start the application in production mode:
 
-## Resources
+```bash
+pnpm run start:prod
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+The API will be available at:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+http://localhost:4000
+```
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Accessing Swagger Documentation
 
-## Stay in touch
+Once the application is running, you can access the Swagger documentation at:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```
+http://localhost:4000/api
+```
 
-## License
+The Swagger UI allows you to:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- View all available endpoints.
+- Test the API directly from the browser.
+- Explore request and response schemas.
+
+---
+
+## Seeding the Database
+
+To seed the database with sample data, run the following command:
+
+```bash
+ts-node seed.ts
+```
+
+This will insert the provided customer records into the `BILLING_RECORDS` table.
+
+---
+
+## API Endpoints
+
+### **GET `/billing`**
+
+- **Description**: Retrieve billing records with optional filtering by `productCode` and `location`.
+- **Access**: All users.
+- **Example Request**:
+  ```http
+  GET /billing?productCode=5000&location=East%20Malaysia
+  ```
+
+### **POST `/billing`**
+
+- **Description**: Create a new billing record.
+- **Access**: Admin only.
+- **Example Request**:
+
+  ```http
+  POST /billing
+  Content-Type: application/json
+
+  {
+    "email": "new.customer@example.com",
+    "firstName": "New",
+    "lastName": "Customer",
+    "photo": "https://example.com/photo.jpg",
+    "productCode": 4000,
+    "location": "West Malaysia",
+    "premiumPaid": 100.00
+  }
+  ```
+
+### **PUT `/billing`**
+
+- **Description**: Update an existing billing record by `productCode`.
+- **Access**: Admin only.
+- **Example Request**:
+
+  ```http
+  PUT /billing?productCode=5000
+  Content-Type: application/json
+
+  {
+    "location": "East Malaysia",
+    "premiumPaid": 200.00
+  }
+  ```
+
+### **DELETE `/billing/:id`**
+
+- **Description**: Delete a billing record by ID.
+- **Access**: Admin only.
+- **Example Request**:
+  ```http
+  DELETE /billing/1
+  ```
+
+### **DELETE `/billing?productCode=:code`**
+
+- **Description**: Delete billing records by `productCode`.
+- **Access**: Admin only.
+- **Example Request**:
+  ```http
+  DELETE /billing?productCode=5000
+  ```
+
+---
+
+## Docker Setup
+
+To run the application using Docker:
+
+1. **Build and Run**:
+
+   ```bash
+   docker-compose up
+   ```
+
+2. **Access the API**:
+   The API will be available at:
+
+   ```
+   http://localhost:4000
+   ```
+
+3. **Access the Database**:
+   The PostgreSQL database will be available at:
+   ```
+   localhost:5432
+   ```
+
+---
+
+## Testing
+
+To run unit tests:
+
+```bash
+pnpm run test
+```
+
+To check test coverage:
+
+```bash
+pnpm run test:cov
+```
