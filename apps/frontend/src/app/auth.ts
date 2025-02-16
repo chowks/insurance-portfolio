@@ -8,7 +8,14 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_SECRET ?? '',
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
     async session({ session, token }) {
       return {
         ...session,
@@ -17,6 +24,12 @@ export const authOptions: AuthOptions = {
           id: token.id,
         },
       };
+    },
+    async redirect({ url, baseUrl }) {
+      if (url === "/login") {
+        return `${baseUrl}/users`;
+      }
+      return url;
     },
   },
 }

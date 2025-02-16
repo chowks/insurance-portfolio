@@ -1,23 +1,12 @@
 'use client';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser, clearUser } from '@/app/store/auth-slice';
+import { useSelector } from 'react-redux';
 
 export default function AuthButton() {
   const { data: session } = useSession();
-  const dispatch = useDispatch();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { isAuthenticated } = useSelector((state) => (state as any).auth);
-
-  useEffect(() => {
-    if (session) {
-      dispatch(setUser(session.user));
-    } else {
-      dispatch(clearUser());
-    }
-  }, [session, dispatch]);
 
   return (
     <div className="text-center">
